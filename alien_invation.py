@@ -1,8 +1,8 @@
 import sys
 import pygame
 from settings import Settings
-from ship import Ship #引用类
-import game_functions as gf #引用模块
+from ship import Ship
+import game_functions as gf
 from pygame.sprite import Group
 from alien import Alien
 from game_stats import GameStats
@@ -25,7 +25,7 @@ def run_game():
     play_button = Button(ai_settings, screen, 'Play')
 
     while True:
-        gf.check_events(ai_settings, screen, stats, 
+        gf.check_events(ai_settings, screen, stats,
             sb, play_button, ship, aliens, bullets)
         if stats.game_active:
             ship.update()

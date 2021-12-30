@@ -18,13 +18,22 @@ def check_events(ai_settings, screen, stats,
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings, 
+            check_play_button(ai_settings,
                 screen, stats, sb, play_button,
                 ship, aliens, bullets, mouse_x, mouse_y)
 
-def check_play_button(ai_settings, screen, stats, 
-    sb, play_button, ship,
-    aliens, bullets, mouse_x, mouse_y):
+def check_keydown_events(event, ai_settings, screen, ship, bullets):
+    if event.key == pygame.K_RIGHT:
+        ship.moving_right = True
+    elif event.key == pygame.K_LEFT:
+        ship.moving_left = True
+    elif event.key == pygame.K_SPACE:
+        fire_bullet(ai_settings, screen, ship, bullets)
+    elif event.key == pygame.K_q:
+        sys.exit()
+
+def check_play_button(ai_settings, screen, stats,
+    sb, play_button, ship, aliens, bullets, mouse_x, mouse_y):
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not stats.game_active:
         ai_settings.initialize_dynamic_settings()
@@ -42,26 +51,16 @@ def check_play_button(ai_settings, screen, stats,
         creat_fleet(ai_settings, screen, ship, aliens)
         ship.center_ship()
 
-def check_keydown_events(event, ai_settings, screen, ship, bullets):
-    if event.key == pygame.K_RIGHT:
-        ship.moving_right = True
-    elif event.key == pygame.K_LEFT:
-        ship.moving_left = True
-    elif event.key == pygame.K_SPACE:
-        fire_bullet(ai_settings, screen, ship, bullets) 
-    elif event.key == pygame.K_q:
-        sys.exit()
-
 def fire_bullet(ai_settings, screen, ship, bullets):
     if len(bullets) < ai_settings.bullets_allowd:
-            new_bullet = Bullet(ai_settings, screen, ship)
-            bullets.add(new_bullet)    
+        new_bullet = Bullet(ai_settings, screen, ship)
+        bullets.add(new_bullet)
 
 def check_keyup_events(event, ship):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = False
     elif event.key == pygame.K_LEFT:
-        ship.moving_left = False  
+        ship.moving_left = False
 
 def update_screen(ai_settings, screen, stats, sb, ship,
     aliens, bullets, play_button):
@@ -81,8 +80,8 @@ def update_bullets(ai_settings, screen, stats, sb,
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    check_bullet_alien_collisions(ai_settings, screen, stats, sb,
-        ship, aliens, bullets)
+    check_bullet_alien_collisions(ai_settings, screen,
+        stats, sb, ship, aliens, bullets)
 
 def check_bullet_alien_collisions(ai_settings, screen,
     stats, sb, ship, aliens, bullets):
